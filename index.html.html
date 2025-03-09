@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jakie opodatkowanie dla IT na B2B</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2c3e50;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --success-color: #27ae60;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        header h1 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+        }
+
+        header p {
+            color: var(--secondary-color);
+            font-size: 1.2rem;
+        }
+
+        .calculator {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 30px;
+            margin-bottom: 40px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--secondary-color);
+        }
+
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="number"]:focus,
+        select:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 20px;
+        }
+
+        .radio-group input[type="radio"] {
+            margin-right: 5px;
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background-color 0.3s;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        .results {
+            margin-top: 30px;
+            display: none;
+        }
+
+        .results h2 {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .recommendation {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            margin-bottom: 30px;
+            border-left: 5px solid var(--success-color);
+        }
+
+        .recommended-tax {
+            font-size: 1.2rem;
+            margin-top: 10px;
+            font-weight: 600;
+            color: var(--success-color);
+        }
+
+        .tax-comparison {
+            margin-bottom: 30px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .additional-info {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            margin-top: 20px;
+        }
+
+        .additional-info h3 {
+            margin-bottom: 15px;
+            color: var(--secondary-color);
+        }
+
+        .tax-info-section {
+            margin-bottom: 40px;
+        }
+
+        .tax-info-section h2 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .tax-info {
+            background-color: white;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-bottom: 20px;
+        }
+
+        .tax-info h3 {
+            color: var(--secondary-color);
+            margin-bottom: 10px;
+        }
+
+        .tax-info p {
+            color: #555;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+            border-top: 1px solid #ddd;
+            color: #777;
+        }
+
+        footer p {
+            margin-bottom: 10px;
+        }
+
+        .highlight {
+            background-color: #e3f2fd;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            header h1 {
+                font-size: 2rem;
+            }
+            
+            .calculator {
+                padding: 20px;
+            }
+            
+            .tax-comparison {
+                overflow-x: auto;
+            }
+            
+            .radio-group {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Jakie opodatkowanie dla IT na B2B?</h1>
+            <p>Kalkulator najkorzystniejszej formy opodatkowania dla specjalistów IT</p>
+        </header>
+
+        <div class="calculator">
+            <form id="taxForm">
+                <div class="form-group">
+                    <label for="jobTitle">Stanowisko:</label>
+                    <select id="jobTitle" required>
+                        <option value="">-- Wybierz stanowisko --</option>
+                        <option value="developer">Programista (Developer)</option>
+                        <option value="manualTester">Tester manualny</option>
+                        <option value="autoTester">Tester automatyzujący</option>
+                        <option value="devops">DevOps</option>
+                        <option value="architect">Architekt</option>
+                        <option value="projectManager">Project Manager</option>
+                        <option value="designer">UX/UI Designer</option>
+                        <option value="dataScientist">Data Scientist</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="income">Miesięczny przychód (PLN):</label>
+                    <input type="number" id="income" min="1000" required placeholder="np. 15000">
+                </div>
+
+                <div class="form-group">
+                    <label for="costs">Miesięczne koszty (PLN):</label>
+                    <input type="number" id="costs" min="0" required placeholder="np. 3000">
+                </div>
+
+                <div class="form-group">
+                    <label for="zus">Składki ZUS:</label>
+                    <select id="zus" required>
+                        <option value="full">Pełny ZUS</option>
+                        <option value="preferential">Preferencyjny ZUS</option>
+                        <option value="small">Mały ZUS Plus</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Uprawnienie do IP BOX:</label>
+                    <div class="radio-group">
+                        <input type="radio" id="ipBoxYes" name="ipBox" value="yes">
+                        <label for="ipBoxYes">Tak</label>
+                        <input type="radio" id="ipBoxNo" name="ipBox" value="no" checked>
+                        <label for="ipBoxNo">Nie</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" id="calculateBtn">Oblicz</button>
+                </div>
+            </form>
+
+            <div id="results" class="results">
+                <h2>Wyniki analizy</h2>
+                <div id="recommendation" class="recommendation">
+                    <h3>Rekomendowana forma opodatkowania:</h3>
+                    <div id="recommendedTax" class="recommended-tax"></div>
+                </div>
+                
+                <div class="tax-comparison">
+                    <h3>Porównanie form opodatkowania:</h3>
+                    <table id="taxTable">
+                        <thead>
+                            <tr>
+                                <th>Forma opodatkowania</th>
+                                <th>Miesięczny zysk netto</th>
+                                <th>Roczny zysk netto</th>
+                                <th>Efektywna stawka</th>
+                            </tr>
+                        </thead>
+                        <tbody id="taxResults">
+                            <!-- Wyniki będą dodawane przez JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="additional-info">
+                    <h3>Dodatkowe informacje:</h3>
+                    <div id="additionalInfo"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tax-info-section">
+            <h2>Formy opodatkowania dla B2B w Polsce</h2>
+            
+            <div class="tax-info">
+                <h3>Skala podatkowa (12%, 32%)</h3>
+                <p>Standardowa forma opodatkowania z progami 12% i 32%. Możliwość odliczania kosztów uzyskania przychodu oraz składek ZUS. Przychód powyżej 120 000 zł rocznie opodatkowany jest stawką 32%.</p>
+            </div>
+            
+            <div class="tax-info">
+                <h3>Podatek liniowy (19%)</h3>
+                <p>Jednolita stawka 19% niezależnie od wysokości dochodu. Możliwość odliczania kosztów uzyskania przychodu oraz składek ZUS.</p>
+            </div>
+            
+            <div class="tax-info">
+                <h3>Ryczałt od przychodów ewidencjonowanych</h3>
+                <p>Stawki: 8,5%, 12%, 15% zależnie od rodzaju działalności. Brak możliwości odliczania kosztów, ale prostsza księgowość.</p>
+            </div>
+            
+            <div class="tax-info">
+                <h3>IP BOX (5%)</h3>
+                <p>Preferencyjne opodatkowanie dochodów z praw własności intelektualnej. Stawka 5% dla kwalifikowanych dochodów, wymaga prowadzenia szczegółowej dokumentacji.</p>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Uwaga: Kalkulator ma charakter orientacyjny. Przed podjęciem decyzji skonsultuj się z księgowym lub doradcą podatkowym.</p>
+            <p>&copy; 2025 Jakie opodatkowanie dla IT</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const taxForm = document.getElementById('taxForm');
+            const resultsSection = document.getElementById('results');
+            
+            taxForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                calculateTaxes();
+            });
+            
+            function calculateTaxes() {
+                // Pobieranie danych z formularza
+                const jobTitle = document.getElementById('jobTitle').value;
+                const monthlyIncome = parseFloat(document.getElementById('income').value);
+                const monthlyCosts = parseFloat(document.getElementById('costs').value);
+                const zusType = document.getElementById('zus').value;
+                const ipBoxEligible = document.querySelector('input[name="ipBox"]:checked').value === 'yes';
+                
+                // Roczne wartości
+                const yearlyIncome = monthlyIncome * 12;
+                const yearlyCosts = monthlyCosts * 12;
+                
+                // Obliczanie składek ZUS
+                const zusValues = calculateZUS(zusType);
+                const yearlyZUS = zusValues.yearly;
+                const monthlyZUS = zusValues.monthly;
+                
+                // Określanie stawki ryczałtu na podstawie stanowiska
+                const ryczaltRate = getRyczaltRate(jobTitle);
+                
+                // Obliczanie wyników dla różnych form opodatkowania
+                const results = {
+                    scale: calculateScaleTax(yearlyIncome, yearlyCosts, yearlyZUS),
+                    linear: calculateLinearTax(yearlyIncome, yearlyCosts, yearlyZUS),
+                    ryczalt: calculateRyczaltTax(yearlyIncome, yearlyZUS, ryczaltRate),
+                    ipBox: ipBoxEligible ? calculateIPBoxTax(yearlyIncome, yearlyCosts, yearlyZUS) : null
+                };
+                
+                // Wyświetlanie wyników
+                displayResults(results, monthlyIncome, monthlyCosts, monthlyZUS, jobTitle, ipBoxEligible, ryczaltRate);
+            }
+            
+            function calculateZUS(zusType) {
+                let monthly = 0;
+                
+                // Przybliżone wartości składek ZUS w 2025 roku
+                switch(zusType) {
+                    case 'full':
+                        monthly = 1600; // Pełny ZUS (wartość przybliżona)
+                        break;
+                    case 'preferential':
+                        monthly = 400; // Preferencyjny ZUS (wartość przybliżona)
+                        break;
+                    case 'small':
+                        monthly = 800; // Mały ZUS Plus (wartość przybliżona)
+                        break;
+                }
+                
+                return {
+                    monthly: monthly,
+                    yearly: monthly * 12
+                };
+            }
+            
+            function getRyczaltRate(jobTitle) {
+                // Stawki ryczałtu dla różnych stanowisk IT
+                switch(jobTitle) {
+                    case 'developer':
+                    case 'autoTester':
+                    case 'devops':
+                    case 'architect':
+                    case 'dataScientist':
+                        return 0.12; // 12% dla działalności związanej z oprogramowaniem
+                    case 'manualTester':
+                        return 0.085; // 8.5% dla działalności usługowej
+                    case 'projectManager':
+                    case 'designer':
+                        return 0.15; // 15% dla usług specjalistycznych
+                    default:
+                        return 0.12; // domyślnie 12%
+                }
+            }
+            
+            function calculateScaleTax(yearlyIncome, yearlyCosts, yearlyZUS) {
+                const taxDeductibleZUS = yearlyZUS * 0.86; // Część ZUS odliczana od podatku
+                const healthInsurance = yearlyZUS * 0.14; // Składka zdrowotna (uproszczone)
+                
+                const income = yearlyIncome - yearlyCosts;
+                const taxBase = Math.max(0, income - taxDeductibleZUS);
+                
+                let tax = 0;
+                if (taxBase <= 120000) {
+                    tax = taxBase * 0.12;
+                } else {
+                    tax = 120000 * 0.12 + (taxBase - 120000) * 0.32;
+                }
+                
+                // Odliczenie składki zdrowotnej i kwoty wolnej
+                tax = Math.max(0, tax - 3600); // Kwota wolna ~30000 * 0.12
+                
+                // Składka zdrowotna 9% (nie odliczana od podatku)
+                const healthTax = income * 0.09;
+                
+                const yearlyNetIncome = income - tax - healthTax;
+                
+                return {
+                    yearlyGross: income,
+                    yearlyNet: yearlyNetIncome,
+                    monthlyNet: yearlyNetIncome / 12,
+                    tax: tax,
+                    healthTax: healthTax,
+                    effectiveRate: ((tax + healthTax) / income * 100).toFixed(2)
+                };
+            }
+            
+            function calculateLinearTax(yearlyIncome, yearlyCosts, yearlyZUS) {
+                const taxDeductibleZUS = yearlyZUS * 0.86; // Część ZUS odliczana od podatku
+                const healthInsurance = yearlyZUS * 0.14; // Składka zdrowotna
+                
+                const income = yearlyIncome - yearlyCosts;
+                const taxBase = Math.max(0, income - taxDeductibleZUS);
+                
+                const tax = taxBase * 0.19;
+                
+                // Składka zdrowotna 4.9% (maksymalnie)
+                const healthTax = Math.min(income * 0.049, 9000); // Limit składki zdrowotnej
+                
+                const yearlyNetIncome = income - tax - healthTax;
+                
+                return {
+                    yearlyGross: income,
+                    yearlyNet: yearlyNetIncome,
+                    monthlyNet: yearlyNetIncome / 12,
+                    tax: tax,
+                    healthTax: healthTax,
+                    effectiveRate: ((tax + healthTax) / income * 100).toFixed(2)
+                };
+            }
+            
+            function calculateRyczaltTax(yearlyIncome, yearlyZUS, ryczaltRate) {
+                // W ryczałcie nie odliczamy kosztów, tylko składki ZUS
+                const taxDeductibleZUS = yearlyZUS * 0.5; // Część ZUS odliczana od przychodu
+                const healthInsurance = yearlyZUS * 0.14; // Składka zdrowotna
+                
+                const taxBase = Math.max(0, yearlyIncome - taxDeductibleZUS);
+                const tax = taxBase * ryczaltRate;
+                
+                // Składka zdrowotna (zależna od przychodu)
+                let healthTax = 0;
+                if (yearlyIncome <= 60000) {
+                    healthTax = 419 * 12; // Kwota ryczałtowa dla przychodów do 60 tys.
+                } else if (yearlyIncome <= 300000) {
+                    healthTax = 700 * 12; // Kwota ryczałtowa dla przychodów do 300 tys.
+                } else {
+                    healthTax = 1200 * 12; // Kwota ryczałtowa dla przychodów powyżej 300 tys.
+                }
+                
+                const yearlyNetIncome = yearlyIncome - tax - healthTax - yearlyZUS;
+                
+                return {
+                    yearlyGross: yearlyIncome, // W ryczałcie liczymy od przychodu, nie dochodu
+                    yearlyNet: yearlyNetIncome,
+                    monthlyNet: yearlyNetIncome / 12,
+                    tax: tax,
+                    healthTax: healthTax,
+                    effectiveRate: ((tax + healthTax + yearlyZUS) / yearlyIncome * 100).toFixed(2)
+                };
+            }
+            
+            function calculateIPBoxTax(yearlyIncome, yearlyCosts, yearlyZUS) {
+                const taxDeductibleZUS = yearlyZUS * 0.86; // Część ZUS odliczana od podatku
+                const healthInsurance = yearlyZUS * 0.14; // Składka zdrowotna
+                
+                const income = yearlyIncome - yearlyCosts;
+                const taxBase = Math.max(0, income - taxDeductibleZUS);
+                
+                const tax = taxBase * 0.05; // Stawka 5% dla IP Box
+                
+                // Składka zdrowotna 4.9% (jak przy liniowym)
+                const healthTax = Math.min(income * 0.049, 9000); // Limit składki zdrowotnej
+                
+                const yearlyNetIncome = income - tax - healthTax;
+                
+                return {
+                    yearlyGross: income,
+                    yearlyNet: yearlyNetIncome,
+                    monthlyNet: yearlyNetIncome / 12,
+                    tax: tax,
+                    healthTax: healthTax,
+                    effectiveRate: ((tax + healthTax) / income * 100).toFixed(2)
+                };
+            }
+            
+            function displayResults(results, monthlyIncome, monthlyCosts, monthlyZUS, jobTitle, ipBoxEligible, ryczaltRate) {
+                resultsSection.style.display = 'block';
+                
+                // Znajdowanie najkorzystniejszej formy opodatkowania
+                let bestOption = { name: '', monthlyNet: 0 };
+                
+                if (results.scale.monthlyNet > bestOption.monthlyNet) {
+                    bestOption = { name: 'Skala podatkowa (12%, 32%)', monthlyNet: results.scale.monthlyNet };
+                }
+                
+                if (results.linear.monthlyNet > bestOption.monthlyNet) {
+                    bestOption = { name: 'Podatek liniowy (19%)', monthlyNet: results.linear.monthlyNet };
+                }
+                
+                if (results.ryczalt.monthlyNet > bestOption.monthlyNet) {
+                    bestOption = { name: `Ryczałt (${(ryczaltRate * 100).toFixed(1)}%)`, monthlyNet: results.ryczalt.monthlyNet };
+                }
+                
+                if (ipBoxEligible && results.ipBox && results.ipBox.monthlyNet > bestOption.monthlyNet) {
+                    bestOption = { name: 'IP Box (5%)', monthlyNet: results.ipBox.monthlyNet };
+                }
+                
+                // Wyświetlanie rekomendacji
+                document.getElementById('recommendedTax').textContent = `${bestOption.name} - ${bestOption.monthlyNet.toFixed(2)} PLN miesięcznie netto`;
+                
+                // Wypełnianie tabeli porównawczej
+                const taxResultsTable = document.getElementById('taxResults');
+                taxResultsTable.innerHTML = '';
+                
+                // Funkcja do dodawania wiersza z danymi
+                function addRow(name, result, isBest) {
+                    const row = document.createElement('tr');
+                    if (isBest) row.classList.add('highlight');
+                    
+                    row.innerHTML = `
+                        <td>${name}</td>
+                        <td>${result.monthlyNet.toFixed(2)} PLN</td>
+                        <td>${result.yearlyNet.toFixed(2)} PLN</td>
+                        <td>${result.effectiveRate}%</td>
+                    `;
+                    
+                    taxResultsTable.appendChild(row);
+                }
+                
+                // Dodawanie wierszy dla każdej formy opodatkowania
+                addRow('Skala podatkowa (12%, 32%)', results.scale, bestOption.name === 'Skala podatkowa (12%, 32%)');
+                addRow('Podatek liniowy (19%)', results.linear, bestOption.name === 'Podatek liniowy (19%)');
+                addRow(`Ryczałt (${(ryczaltRate * 100).toFixed(1)}%)`, results.ryczalt, bestOption.name === `Ryczałt (${(ryczaltRate * 100).toFixed(1)}%)`);
+                
+                if (ipBoxEligible && results.ipBox) {
+                    addRow('IP Box (5%)', results.ipBox, bestOption.name === 'IP Box (5%)');
+                }
+                
+                // Dodatkowe informacje
+                const additionalInfoDiv = document.getElementById('additionalInfo');
+                
+                // Przygotowanie specyficznych informacji dla stanowiska
+                let jobSpecificInfo = '';
+                switch(jobTitle) {
+                    case 'developer':
+                        jobSpecificInfo = 'Jako programista możesz kwalifikować się do IP Box, jeśli tworzysz oprogramowanie objęte prawami autorskimi.';
+                        break;
+                    case 'autoTester':
+                        jobSpecificInfo = 'Jako tester automatyzujący możesz kwalifikować się do IP Box, jeśli tworzysz skrypty testowe objęte prawami autorskimi.';
+                        break;
+                    case 'manualTester':
+                        jobSpecificInfo = 'Jako tester manualny zazwyczaj nie kwalifikujesz się do IP Box. Ryczałt może być korzystny ze względu na niższą stawkę 8.5%.';
+                        break;
+                    case 'devops':
+                        jobSpecificInfo = 'Jako DevOps możesz kwalifikować się do IP Box, jeśli tworzysz skrypty automatyzujące i konfiguracje jako utwory objęte prawami autorskimi.';
+                        break;
+                    case 'architect':
+                        jobSpecificInfo = 'Jako architekt oprogramowania często kwalifikujesz się do IP Box, tworząc projekty architektoniczne objęte prawami autorskimi.';
+                        break;
+                    case 'projectManager':
+                        jobSpecificInfo = 'Jako Project Manager zazwyczaj nie kwalifikujesz się do IP Box. Przy wyższych dochodach podatek liniowy może być najkorzystniejszy.';
+                        break;
+                    case 'designer':
+                        jobSpecificInfo = 'Jako UX/UI Designer możesz kwalifikować się do IP Box, jeśli tworzysz projekty graficzne objęte prawami autorskimi.';
+                        break;
+                    case 'dataScientist':
+                        jobSpecificInfo = 'Jako Data Scientist możesz kwalifikować się do IP Box, jeśli tworzysz autorskie algorytmy i modele objęte prawami autorskimi.';
+                        break;
+                }
+                
+                additionalInfoDiv.innerHTML = `
+                    <p><strong>Miesięczny przychód:</strong> ${monthlyIncome.toFixed(2)} PLN</p>
+                    <p><strong>Miesięczne koszty:</strong> ${monthlyCosts.toFixed(2)} PLN (${((monthlyCosts/monthlyIncome)*100).toFixed(1)}% przychodu)</p>
+                    <p><strong>Miesięczne składki ZUS:</strong> ${monthlyZUS.toFixed(2)} PLN</p>
+                    <p><strong>Status IP Box:</strong> ${ipBoxEligible ? 'Uprawniony' : 'Nieuprawniony'}</p>
+                    <p><strong>Informacja dla stanowiska:</strong> ${jobSpecificInfo}</p>
+                    <p><strong>Ważne:</strong> Prezentowane wyliczenia mają charakter orientacyjny i mogą różnić się od rzeczywistych zobowiązań podatkowych. Warto skonsultować się z księgowym lub doradcą podatkowym.</p>
+                `;
+            }
+        });
+    </script>
+</body>
+</html>
